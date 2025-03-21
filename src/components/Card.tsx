@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card as CardType, Suit } from '@/utils/gameLogic';
+import { Club, Diamond, Heart, Spade } from 'lucide-react';
 
 interface CardProps {
   card: CardType;
@@ -16,6 +17,15 @@ const getSuitSymbol = (suit: Suit): string => {
     case 'diamonds': return '♦';
     case 'clubs': return '♣';
     case 'spades': return '♠';
+  }
+};
+
+const getSuitIcon = (suit: Suit, size: number = 16) => {
+  switch (suit) {
+    case 'hearts': return <Heart size={size} className="text-hearts" />;
+    case 'diamonds': return <Diamond size={size} className="text-diamonds" />;
+    case 'clubs': return <Club size={size} className="text-clubs" />;
+    case 'spades': return <Spade size={size} className="text-spades" />;
   }
 };
 
@@ -70,12 +80,16 @@ const Card: React.FC<CardProps> = ({
           </div>
         </div>
         <div className="flip-card-back card-back">
-          <div className="text-white opacity-50 flex flex-col items-center justify-center h-full">
-            <div className="text-2xl mb-2">
-              <span className="text-hearts">♥</span> <span className="text-diamonds">♦</span>
-            </div>
-            <div className="text-2xl">
-              <span className="text-clubs">♣</span> <span className="text-spades">♠</span>
+          <div className="card-back-pattern">
+            <div className="card-back-border">
+              <div className="card-back-inner">
+                <div className="card-back-diamond"></div>
+                <div className="card-back-pattern-grid">
+                  {Array(9).fill(0).map((_, i) => (
+                    <div key={i} className="card-back-pattern-dot"></div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>

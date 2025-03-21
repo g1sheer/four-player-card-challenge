@@ -133,6 +133,46 @@
   .text-spades {
     color: #1A202C;
   }
+  
+  /* Card back styles */
+  .card-back-pattern {
+    @apply w-full h-full bg-indigo-900 rounded-lg flex items-center justify-center p-1.5;
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      rgba(255, 255, 255, 0.05) 2px,
+      transparent 2px,
+      transparent 4px
+    );
+  }
+  
+  .card-back-border {
+    @apply border-2 border-indigo-500/50 rounded-md w-full h-full flex items-center justify-center p-1;
+  }
+  
+  .card-back-inner {
+    @apply border border-indigo-400/30 rounded-sm w-full h-full flex flex-col items-center justify-center bg-indigo-800 relative;
+  }
+  
+  .card-back-diamond {
+    @apply absolute inset-0 m-auto w-16 h-16 bg-indigo-700 rounded-sm;
+    transform: rotate(45deg);
+    background-image: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 70%
+    );
+  }
+  
+  .card-back-pattern-grid {
+    @apply grid grid-cols-3 gap-2 w-full h-full p-4 z-10;
+  }
+  
+  .card-back-pattern-dot {
+    @apply bg-indigo-500/40 rounded-full;
+    width: 6px;
+    height: 6px;
+  }
 }
 
 /* Custom styles for cards */
