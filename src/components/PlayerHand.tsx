@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Card from './Card';
 import { Card as CardType, Player } from '@/utils/gameLogic';
@@ -83,7 +82,7 @@ const PlayerHand: React.FC<PlayerHandProps> = ({
               <Card 
                 key={card.id} 
                 card={card} 
-                revealed={isCurrentPlayer && cardsRevealed}
+                revealed={isPlayerTurn ? (isCurrentPlayer && cardsRevealed) : cardsRevealed}
                 animationDelay={index * 50}
               />
             ))}
