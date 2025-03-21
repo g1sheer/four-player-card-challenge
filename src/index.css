@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -118,19 +119,19 @@
   }
 
   .text-hearts {
-    @apply text-hearts;
+    color: #e63946;
   }
 
   .text-diamonds {
-    @apply text-diamonds;
+    color: #ff6b6b;
   }
 
   .text-clubs {
-    @apply text-clubs;
+    color: #1A202C;
   }
 
   .text-spades {
-    @apply text-spades;
+    color: #1A202C;
   }
 }
 
