@@ -41,7 +41,7 @@ const Card: React.FC<CardProps> = ({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsAnimating(false);
+      setIsAnimating(true);
     }, animationDelay);
 
     return () => clearTimeout(timer);
