@@ -82,7 +82,7 @@ const PlayerHand: React.FC<PlayerHandProps> = ({
               <Card 
                 key={card.id} 
                 card={card} 
-                revealed={isPlayerTurn}
+                revealed={!isPlayerTurn}
                 animationDelay={index * 50}
               />
             ))}
