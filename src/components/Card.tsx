@@ -31,7 +31,7 @@ const getSuitIcon = (suit: Suit, size: number = 16) => {
 
 const Card: React.FC<CardProps> = ({ 
   card, 
-  revealed = true, 
+  revealed = false, 
   onClick, 
   className = '',
   animationDelay = 0 
@@ -41,7 +41,7 @@ const Card: React.FC<CardProps> = ({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsAnimating(true);
+      setIsAnimating(false);
     }, animationDelay);
 
     return () => clearTimeout(timer);
