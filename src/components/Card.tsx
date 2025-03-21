@@ -42,7 +42,7 @@ const Card: React.FC<CardProps> = ({
   }, [revealed]);
 
   const suitSymbol = getSuitSymbol(card.suit);
-  const suitClass = `card-suit-${card.suit}`;
+  const suitClass = `text-${card.suit}`;
 
   const handleClick = () => {
     if (onClick) onClick();
