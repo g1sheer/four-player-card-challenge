@@ -31,7 +31,7 @@ const getSuitIcon = (suit: Suit, size: number = 16) => {
 
 const Card: React.FC<CardProps> = ({ 
   card, 
-  revealed = false, 
+  revealed = true, 
   onClick, 
   className = '',
   animationDelay = 0 
