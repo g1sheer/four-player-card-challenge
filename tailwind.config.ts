@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -63,8 +62,8 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				hearts: '#E53E3E',
-				diamonds: '#E53E3E',
+				hearts: '#e63946',
+				diamonds: '#ff6b6b',
 				clubs: '#1A202C',
 				spades: '#1A202C',
 				cardface: '#FFFFFF',
@@ -146,7 +145,6 @@ export default {
 				'none': 'none',
 				'blur': 'blur(20px)'
 			},
-			// Add the backface visibility utilities
 			backfaceVisibility: {
 				hidden: 'hidden',
 				visible: 'visible',
@@ -155,7 +153,6 @@ export default {
 	},
 	plugins: [
 		require("tailwindcss-animate"),
-		// Add plugin for backface-visibility
 		function({ addUtilities }) {
 			addUtilities({
 				'.backface-visibility-hidden': {
