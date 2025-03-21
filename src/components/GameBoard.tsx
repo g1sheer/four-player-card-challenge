@@ -33,11 +33,11 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
     targetPlayerId?: number | null,
     rank?: Rank | null,
     quantity?: number | null,
-    suit?: Suit | null
+    suits?: Suit[] | null
   ) => {
     if (!gameState) return;
     
-    const newState = makeGuess(gameState, targetPlayerId, rank, quantity, suit);
+    const newState = makeGuess(gameState, targetPlayerId, rank, quantity, suits);
     setGameState(newState);
     
     // Show a notification for correct/incorrect guesses
@@ -60,7 +60,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
     
     // Show a notification for new treasure chests
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
-    const newCurrentPlayer = newState.players[gameState.currentPlayerIndex];
+    const newCurrentPlayer = newState.players[newState.currentPlayerIndex];
     
     if (newCurrentPlayer.treasureChests.length > currentPlayer.treasureChests.length) {
       toast({
@@ -171,7 +171,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
                     key={player.id}
                     player={player}
                     isCurrentPlayer={false}
-                    isPlayerTurn={gameState.currentPlayerIndex === gameState.currentPlayerIndex && gameState.guessStage === 'player'}
+                    isPlayerTurn={gameState.currentPlayerIndex === index}
                     cardsRevealed={false}
                     onSelectPlayer={() => handleMakeGuess(player.id)}
                     selectedForGuess={gameState.selectedPlayerIndex === player.id}
@@ -200,7 +200,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
               <PlayerHand
                 player={currentPlayer}
                 isCurrentPlayer={true}
-                isPlayerTurn={gameState.currentPlayerIndex === gameState.currentPlayerIndex}
+                isPlayerTurn={true}
                 cardsRevealed={showCards}
               />
             </div>

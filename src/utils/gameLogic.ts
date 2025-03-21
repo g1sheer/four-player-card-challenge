@@ -22,7 +22,7 @@ export interface GameState {
   guessStage: 'player' | 'rank' | 'quantity' | 'suit' | 'complete';
   guessedRank: Rank | null;
   guessedQuantity: number | null;
-  guessedSuit: Suit | null;
+  guessedSuits: Suit[] | null;
   lastGuessCorrect: boolean | null;
   gameOver: boolean;
   winner: number | null;
@@ -88,7 +88,7 @@ export const initializeGame = (playerNames: string[] = ['Player 1', 'Player 2', 
     guessStage: 'player',
     guessedRank: null,
     guessedQuantity: null,
-    guessedSuit: null,
+    guessedSuits: null,
     lastGuessCorrect: null,
     gameOver: false,
     winner: null
@@ -167,7 +167,7 @@ export const makeGuess = (
   targetPlayerId: number | null = null,
   rank: Rank | null = null,
   quantity: number | null = null,
-  suit: Suit | null = null
+  suits: Suit[] | null = null
 ): GameState => {
   let newState = { ...gameState };
   
@@ -213,21 +213,33 @@ export const makeGuess = (
       break;
       
     case 'suit':
-      if (suit !== null && newState.guessedRank !== null && newState.guessedQuantity !== null) {
-        newState.guessedSuit = suit;
+      if (suits !== null && suits.length > 0 && newState.guessedRank !== null && newState.guessedQuantity !== null) {
+        newState.guessedSuits = suits;
         const targetPlayer = newState.players[newState.selectedPlayerIndex!];
-        const cardsWithRankAndSuit = getCardsByRankAndSuit(targetPlayer.cards, newState.guessedRank, suit);
         
-        if (cardsWithRankAndSuit.length > 0) {
+        // Check if player has all the guessed suits for the rank
+        let allSuitsCorrect = true;
+        const matchingCards: Card[] = [];
+        
+        for (const suit of suits) {
+          const cardsWithRankAndSuit = getCardsByRankAndSuit(targetPlayer.cards, newState.guessedRank, suit);
+          if (cardsWithRankAndSuit.length === 0) {
+            allSuitsCorrect = false;
+            break;
+          }
+          matchingCards.push(...cardsWithRankAndSuit);
+        }
+        
+        if (allSuitsCorrect && matchingCards.length === newState.guessedQuantity) {
           // Correct guess! Take the cards
           const currentPlayer = newState.players[newState.currentPlayerIndex];
           const targetPlayer = newState.players[newState.selectedPlayerIndex!];
           
           // Remove the cards from target player
-          const updatedTargetPlayer = removeCardsFromPlayer(targetPlayer, cardsWithRankAndSuit);
+          const updatedTargetPlayer = removeCardsFromPlayer(targetPlayer, matchingCards);
           
           // Add the cards to current player
-          const updatedCurrentPlayer = addCardsToPlayer(currentPlayer, cardsWithRankAndSuit);
+          const updatedCurrentPlayer = addCardsToPlayer(currentPlayer, matchingCards);
           
           // Check if the current player can make a treasure chest
           const potentialTreasureChests = checkForTreasureChest(updatedCurrentPlayer.cards);
@@ -280,7 +292,7 @@ export const makeGuess = (
       newState.selectedPlayerIndex = null;
       newState.guessedRank = null;
       newState.guessedQuantity = null;
-      newState.guessedSuit = null;
+      newState.guessedSuits = null;
       
       if (!newState.lastGuessCorrect) {
         newState.currentPlayerIndex = (newState.currentPlayerIndex + 1) % newState.players.length;

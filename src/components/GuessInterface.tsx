@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Card,
   CardContent,
@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { RANKS, SUITS, Rank, Suit, GameState } from '@/utils/gameLogic';
 import { Check, X, Heart, Diamond, Club, Spade } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface GuessInterfaceProps {
   gameState: GameState;
@@ -18,7 +19,7 @@ interface GuessInterfaceProps {
     targetPlayerId?: number | null,
     rank?: Rank | null,
     quantity?: number | null,
-    suit?: Suit | null
+    suits?: Suit[] | null
   ) => void;
   visible: boolean;
 }
@@ -28,7 +29,25 @@ const GuessInterface: React.FC<GuessInterfaceProps> = ({
   onMakeGuess,
   visible
 }) => {
+  const [selectedSuits, setSelectedSuits] = useState<Suit[]>([]);
+
   if (!visible) return null;
+
+  const handleSuitSelection = (suit: Suit) => {
+    if (selectedSuits.includes(suit)) {
+      setSelectedSuits(selectedSuits.filter(s => s !== suit));
+    } else {
+      if (gameState.guessedQuantity && selectedSuits.length < gameState.guessedQuantity) {
+        setSelectedSuits([...selectedSuits, suit]);
+      }
+    }
+  };
+
+  const handleSuitsSubmit = () => {
+    if (gameState.guessedQuantity && selectedSuits.length === gameState.guessedQuantity) {
+      onMakeGuess(null, null, null, selectedSuits);
+    }
+  };
 
   const renderPlayerSelection = () => {
     const otherPlayers = gameState.players.filter((_, index) => index !== gameState.currentPlayerIndex);
@@ -129,9 +148,9 @@ const GuessInterface: React.FC<GuessInterfaceProps> = ({
     
     return (
       <div className="space-y-4 animate-slide-up">
-        <CardTitle>Guess a Suit</CardTitle>
+        <CardTitle>Guess Suits</CardTitle>
         <CardDescription>
-          Which suit of
+          Which {gameState.guessedQuantity && gameState.guessedQuantity > 1 ? `${gameState.guessedQuantity} suits` : 'suit'} of
           {gameState.guessedRank && (
             <span className="font-medium"> {gameState.guessedRank} </span>
           )}
@@ -142,18 +161,46 @@ const GuessInterface: React.FC<GuessInterfaceProps> = ({
           has?
         </CardDescription>
         
-        <div className="flex justify-center gap-3">
-          {SUITS.map((suit) => (
+        <div className="flex flex-col gap-3 items-center">
+          <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
+            {SUITS.map((suit) => (
+              <div key={suit} className="flex items-center space-x-2">
+                <Checkbox 
+                  id={`suit-${suit}`} 
+                  checked={selectedSuits.includes(suit)}
+                  onCheckedChange={() => handleSuitSelection(suit)}
+                  disabled={
+                    gameState.guessedQuantity !== null && 
+                    selectedSuits.length >= gameState.guessedQuantity && 
+                    !selectedSuits.includes(suit)
+                  }
+                />
+                <label 
+                  htmlFor={`suit-${suit}`}
+                  className="flex items-center cursor-pointer text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  <SuitIcon suit={suit} />
+                  <span className="ml-2 capitalize">{suit}</span>
+                </label>
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-4">
             <Button
-              key={suit}
-              variant="outline"
-              className="h-14 w-20 flex items-center justify-center gap-2"
-              onClick={() => onMakeGuess(null, null, null, suit)}
+              onClick={handleSuitsSubmit}
+              disabled={gameState.guessedQuantity === null || selectedSuits.length !== gameState.guessedQuantity}
             >
-              <SuitIcon suit={suit} />
-              <span className="capitalize">{suit}</span>
+              Submit Guess
             </Button>
-          ))}
+          </div>
+          
+          {gameState.guessedQuantity && (
+            <p className="text-sm text-muted-foreground mt-2">
+              Select {gameState.guessedQuantity} suits. 
+              Selected: {selectedSuits.length}/{gameState.guessedQuantity}
+            </p>
+          )}
         </div>
       </div>
     );
@@ -184,7 +231,10 @@ const GuessInterface: React.FC<GuessInterfaceProps> = ({
         
         <Button
           className="mt-4"
-          onClick={() => onMakeGuess()}
+          onClick={() => {
+            setSelectedSuits([]);
+            onMakeGuess();
+          }}
         >
           Continue
         </Button>
