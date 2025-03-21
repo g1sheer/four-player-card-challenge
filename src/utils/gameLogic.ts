@@ -244,7 +244,7 @@ export const makeGuess = (
           // Check if the current player can make a treasure chest
           const potentialTreasureChests = checkForTreasureChest(updatedCurrentPlayer.cards);
           
-          if (potentialTreasureChests.length > currentPlayer.treasureChests.length) {
+          if (potentialTreasureChests.length > 0) {
             // New treasure chest formed!
             const newChests = potentialTreasureChests.filter(
               chest => !currentPlayer.treasureChests.some(c => c.rank === chest.rank)
