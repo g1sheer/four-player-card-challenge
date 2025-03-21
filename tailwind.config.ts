@@ -145,8 +145,34 @@ export default {
 			backdropFilter: {
 				'none': 'none',
 				'blur': 'blur(20px)'
+			},
+			// Add the backface visibility utilities
+			backfaceVisibility: {
+				hidden: 'hidden',
+				visible: 'visible',
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		// Add plugin for backface-visibility
+		function({ addUtilities }) {
+			addUtilities({
+				'.backface-visibility-hidden': {
+					'backface-visibility': 'hidden',
+					'-webkit-backface-visibility': 'hidden',
+				},
+				'.backface-visibility-visible': {
+					'backface-visibility': 'visible',
+					'-webkit-backface-visibility': 'visible',
+				},
+				'.rotate-y-180': {
+					'transform': 'rotateY(180deg)',
+				},
+				'.transform-gpu': {
+					'transform': 'translateZ(0)',
+				},
+			});
+		},
+	],
 } satisfies Config;

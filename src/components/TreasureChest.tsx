@@ -3,7 +3,7 @@ import React from 'react';
 import { Rank, Suit } from '@/utils/gameLogic';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Treasure, Heart, Diamond, Club, Spade } from 'lucide-react';
+import { Heart, Diamond, Club, Spade, TreasureMap } from 'lucide-react';
 
 interface TreasureChestProps {
   chests: { rank: Rank, suits: Suit[] }[];
@@ -14,7 +14,7 @@ const TreasureChest: React.FC<TreasureChestProps> = ({ chests }) => {
   if (chests.length === 0) {
     return (
       <div className="glass-panel h-full p-4 flex flex-col items-center justify-center text-muted-foreground">
-        <Treasure className="w-10 h-10 mb-2 opacity-30" />
+        <TreasureMap className="w-10 h-10 mb-2 opacity-30" />
         <p>No treasure chests yet</p>
       </div>
     );
@@ -32,7 +32,7 @@ const TreasureChest: React.FC<TreasureChestProps> = ({ chests }) => {
   return (
     <div className="glass-panel h-full p-4">
       <div className="flex items-center gap-2 mb-4">
-        <Treasure className="w-5 h-5 text-amber-500" />
+        <TreasureMap className="w-5 h-5 text-amber-500" />
         <h3 className="text-lg font-semibold">Treasure Chests</h3>
       </div>
       
