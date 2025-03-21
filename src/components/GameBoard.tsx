@@ -110,7 +110,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
           </Button>
           
           <div className="flex gap-2">
-            <Button 
+            {0 && <Button 
               variant="outline" 
               size="sm"
               onClick={() => setShowCards(!showCards)}
@@ -127,7 +127,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
                   Show Cards
                 </>
               )}
-            </Button>
+            </Button>}
             
             <Button 
               variant="outline" 
