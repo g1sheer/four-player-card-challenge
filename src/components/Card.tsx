@@ -117,7 +117,8 @@ const Card: React.FC<CardProps> = ({
               
               {/* Bottom right rank and suit (inverted) */}
               <div className="flex items-center justify-between">
-                <div className="rotate-180 flex flex-col items-right">
+                <div className="flex-grow"></div>
+                <div className="rotate-180 flex flex-col items-center">
                   <div className="font-bold">{card.rank}</div>
                   <SuitIcon />
                 </div>
