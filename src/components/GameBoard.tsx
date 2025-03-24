@@ -1,19 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { 
   GameState, 
-  Player, 
   Rank, 
   Suit, 
   initializeGame, 
   makeGuess 
 } from '@/utils/gameLogic';
-import PlayerHand from './PlayerHand';
 import GuessInterface from './GuessInterface';
-import TreasureChest from './TreasureChest';
-import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
+import GameHeader from './game/GameHeader';
+import GameOverPanel from './game/GameOverPanel';
+import CurrentPlayerSection from './game/CurrentPlayerSection';
+import OpponentsSection from './game/OpponentsSection';
 
 interface GameBoardProps {
   onBack?: () => void;
@@ -88,6 +87,10 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
     setShowCards(false);
   };
 
+  const handleSelectPlayer = (playerId: number) => {
+    handleMakeGuess(playerId);
+  };
+
   if (!gameState) {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
@@ -98,90 +101,18 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
     <div className="game-board">
       <div className="container mx-auto p-4 pt-16 pb-16 max-w-7xl">
         {/* Header with Navigation and Controls */}
-        <div className="mb-6 flex justify-between items-center">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={onBack}
-            className="flex items-center gap-1"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Menu
-          </Button>
-          
-          <div className="flex gap-2">
-            {false && <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setShowCards(!showCards)}
-              className="flex items-center gap-1"
-            >
-              {showCards ? (
-                <>
-                  <EyeOff className="w-4 h-4" />
-                  Hide Cards
-                </>
-              ) : (
-                <>
-                  <Eye className="w-4 h-4" />
-                  Show Cards
-                </>
-              )}
-            </Button>}
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={handleNewGame}
-            >
-              New Game
-            </Button>
-          </div>
-        </div>
+        <GameHeader onBack={onBack} onNewGame={handleNewGame} />
         
         {/* Game Over Display */}
-        {gameState.gameOver && gameState.winner !== null && (
-          <div className="glass-panel p-6 text-center mb-8 animate-scale-in">
-            <h2 className="text-2xl font-bold mb-2">Game Over!</h2>
-            <p className="text-xl">
-              {gameState.players[gameState.winner].name} wins with {gameState.players[gameState.winner].treasureChests.length} treasure chests!
-            </p>
-            <Button 
-              className="mt-4" 
-              size="lg" 
-              onClick={handleNewGame}
-            >
-              Play Again
-            </Button>
-          </div>
-        )}
+        <GameOverPanel gameState={gameState} onNewGame={handleNewGame} />
         
-        {/* Reordered game interface with player content first */}
+        {/* Game layout with player content first */}
         <div className="flex flex-col space-y-6">
           {/* Current player zone */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left column: Current player's cards */}
-            <div className="lg:col-span-2">
-              <div className="glass-panel p-4">
-                <h3 className="text-lg font-semibold mb-4">Your Hand</h3>
-                <PlayerHand
-                  player={currentPlayer}
-                  isCurrentPlayer={true}
-                  isPlayerTurn={true}
-                  cardsRevealed={showCards}
-                  enlarged={true}
-                />
-              </div>
-            </div>
-            
-            {/* Right column: Treasure chest */}
-            <div>
-              <div className="glass-panel p-4 h-full">
-                <h3 className="text-lg font-semibold mb-4">Your Treasure</h3>
-                <TreasureChest chests={currentPlayer.treasureChests} />
-              </div>
-            </div>
-          </div>
+          <CurrentPlayerSection 
+            currentPlayer={currentPlayer} 
+            showCards={showCards} 
+          />
           
           {/* Guessing interface - under player's cards */}
           {!gameState.gameOver && (
@@ -194,29 +125,11 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
             </div>
           )}
           
-          {/* Opponents section - moved below player's content */}
-          <div className="glass-panel p-4">
-            <h3 className="text-lg font-semibold mb-4">Opponents</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {gameState.players.map((player, index) => {
-                // Skip current player as they're shown separately
-                if (index === gameState.currentPlayerIndex) return null;
-                
-                return (
-                  <PlayerHand
-                    key={player.id}
-                    player={player}
-                    isCurrentPlayer={false}
-                    isPlayerTurn={gameState.currentPlayerIndex === index}
-                    cardsRevealed={false}
-                    onSelectPlayer={() => handleMakeGuess(player.id)}
-                    selectedForGuess={gameState.selectedPlayerIndex === player.id}
-                    compactView={true}
-                  />
-                );
-              })}
-            </div>
-          </div>
+          {/* Opponents section - below player's content */}
+          <OpponentsSection 
+            gameState={gameState} 
+            onSelectPlayer={handleSelectPlayer} 
+          />
         </div>
       </div>
     </div>
