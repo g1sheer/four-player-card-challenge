@@ -8,6 +8,11 @@ interface OpponentsSectionProps {
   onSelectPlayer: (playerId: number) => void;
 }
 
+/**
+ * Component to display all opponent players
+ * @param gameState Current game state
+ * @param onSelectPlayer Callback when an opponent is selected for guessing
+ */
 const OpponentsSection: React.FC<OpponentsSectionProps> = ({ 
   gameState, 
   onSelectPlayer 
@@ -15,6 +20,7 @@ const OpponentsSection: React.FC<OpponentsSectionProps> = ({
   return (
     <div className="glass-panel p-4">
       <h3 className="text-lg font-semibold mb-4">Opponents</h3>
+      {/* Responsive grid layout for opponent cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {gameState.players.map((player, index) => {
           // Skip current player as they're shown separately

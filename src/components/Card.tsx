@@ -10,16 +10,27 @@ interface CardProps {
   size?: 'small' | 'medium' | 'large';
 }
 
+/**
+ * Component that renders a playing card
+ * @param card The card data to render
+ * @param revealed Whether the card should be shown face-up or face-down
+ * @param animationDelay Optional delay for entrance animation
+ * @param size Size variant for the card (small, medium, large)
+ */
 const Card: React.FC<CardProps> = ({ 
   card, 
   revealed = false,
   animationDelay = 0,
   size = 'medium'
 }) => {
+  // State to track card flip animation
   const [isFlipped, setIsFlipped] = useState(false);
+  // State to skip animation on initial render
   const [isInitialRender, setIsInitialRender] = useState(true);
 
-  // Determine size classes
+  /**
+   * Returns CSS classes based on the requested card size
+   */
   const getSizeClasses = () => {
     switch (size) {
       case 'small':
@@ -32,7 +43,9 @@ const Card: React.FC<CardProps> = ({
     }
   };
   
-  // Icon sizes for suits based on card size
+  /**
+   * Returns the appropriate icon size based on card size
+   */
   const getIconSize = () => {
     switch (size) {
       case 'small':
@@ -45,6 +58,7 @@ const Card: React.FC<CardProps> = ({
     }
   };
 
+  // Handle reveal changes and animation
   useEffect(() => {
     // Skip the animation on initial render
     if (isInitialRender) {
@@ -57,6 +71,9 @@ const Card: React.FC<CardProps> = ({
     setIsFlipped(revealed);
   }, [revealed]);
 
+  /**
+   * Returns the appropriate suit icon component
+   */
   const SuitIcon = () => {
     const iconSize = getIconSize();
     
@@ -79,11 +96,13 @@ const Card: React.FC<CardProps> = ({
       className={`flip-card ${sizeClass} ${isFlipped ? 'flipped' : ''}`}
       style={{ animationDelay: `${animationDelay}ms` }}
     >
+      {/* Card flip container */}
       <div className="flip-card-inner w-full h-full">
         {/* Card Front */}
         <div className="flip-card-front w-full h-full">
           <div className={`card-front w-full h-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md`}>
             <div className="p-1.5 flex flex-col justify-between h-full">
+              {/* Top left rank and suit */}
               <div className="flex items-center justify-between">
                 <div className="flex flex-col items-center">
                   <div className="font-bold">{card.rank}</div>
@@ -91,10 +110,12 @@ const Card: React.FC<CardProps> = ({
                 </div>
               </div>
               
+              {/* Center suit */}
               <div className="flex justify-center items-center">
                 <SuitIcon />
               </div>
               
+              {/* Bottom right rank and suit (inverted) */}
               <div className="flex items-center justify-between">
                 <div className="rotate-180 flex flex-col items-center">
                   <div className="font-bold">{card.rank}</div>

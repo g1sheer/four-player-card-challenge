@@ -8,7 +8,13 @@ interface GameOverPanelProps {
   onNewGame: () => void;
 }
 
+/**
+ * Component to display game results when the game is over
+ * @param gameState Current game state
+ * @param onNewGame Callback to start a new game
+ */
 const GameOverPanel: React.FC<GameOverPanelProps> = ({ gameState, onNewGame }) => {
+  // Only render when game is over and there's a winner
   if (!gameState.gameOver || gameState.winner === null) return null;
   
   return (

@@ -16,6 +16,17 @@ interface PlayerHandProps {
   enlarged?: boolean;
 }
 
+/**
+ * Component to display a player's hand of cards
+ * @param player The player whose cards to display
+ * @param isCurrentPlayer Whether this is the current player
+ * @param isPlayerTurn Whether it's this player's turn
+ * @param cardsRevealed Whether cards should be shown face-up
+ * @param onSelectPlayer Callback when player is selected for guessing
+ * @param selectedForGuess Whether this player is currently selected for guessing
+ * @param compactView Whether to show cards in a compact layout
+ * @param enlarged Whether to show cards in a larger size
+ */
 const PlayerHand: React.FC<PlayerHandProps> = ({
   player,
   isCurrentPlayer,
@@ -26,6 +37,9 @@ const PlayerHand: React.FC<PlayerHandProps> = ({
   compactView = false,
   enlarged = false
 }) => {
+  /**
+   * Sorts cards by rank and suit for better presentation
+   */
   const sortedCards = [...player.cards].sort((a, b) => {
     // Sort by rank
     const rankOrder: Record<string, number> = {
@@ -45,6 +59,9 @@ const PlayerHand: React.FC<PlayerHandProps> = ({
     return suitOrder[a.suit] - suitOrder[b.suit];
   });
 
+  /**
+   * Handles clicking on a player to select them for guessing
+   */
   const handleSelectPlayer = () => {
     if (!isCurrentPlayer && isPlayerTurn && onSelectPlayer) {
       onSelectPlayer();
@@ -65,6 +82,7 @@ const PlayerHand: React.FC<PlayerHandProps> = ({
       className={containerClasses}
       onClick={handleSelectPlayer}
     >
+      {/* Player info header with name and treasure count */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-2">
           <div className={`p-2 rounded-full ${isCurrentPlayer ? 'bg-primary text-white' : 'bg-secondary'}`}>
@@ -83,6 +101,7 @@ const PlayerHand: React.FC<PlayerHandProps> = ({
         </Badge>
       </div>
       
+      {/* Cards display area */}
       {player.cards.length > 0 ? (
         <div className="relative">
           <div className={`

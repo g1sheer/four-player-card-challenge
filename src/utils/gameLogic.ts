@@ -1,13 +1,25 @@
-
+/**
+ * Types for card suits in the game
+ */
 export type Suit = 'hearts' | 'diamonds' | 'clubs' | 'spades';
+
+/**
+ * Types for card ranks in the game
+ */
 export type Rank = '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'J' | 'Q' | 'K' | 'A';
 
+/**
+ * Interface representing a playing card
+ */
 export interface Card {
   suit: Suit;
   rank: Rank;
   id: string; // Unique identifier for the card
 }
 
+/**
+ * Interface representing a player in the game
+ */
 export interface Player {
   id: number;
   name: string;
@@ -15,6 +27,9 @@ export interface Player {
   treasureChests: { rank: Rank, suits: Suit[] }[];
 }
 
+/**
+ * Interface representing the current state of the game
+ */
 export interface GameState {
   players: Player[];
   currentPlayerIndex: number;
@@ -28,9 +43,16 @@ export interface GameState {
   winner: number | null;
 }
 
+/**
+ * Constants for all suits and ranks in the game
+ */
 export const SUITS: Suit[] = ['hearts', 'diamonds', 'clubs', 'spades'];
 export const RANKS: Rank[] = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
+/**
+ * Creates a full deck of cards
+ * @returns An array of Card objects representing a complete deck
+ */
 export const createDeck = (): Card[] => {
   const deck: Card[] = [];
   
@@ -47,6 +69,11 @@ export const createDeck = (): Card[] => {
   return deck;
 };
 
+/**
+ * Shuffles a deck of cards using the Fisher-Yates algorithm
+ * @param deck The deck of cards to shuffle
+ * @returns A new shuffled array of cards
+ */
 export const shuffleDeck = (deck: Card[]): Card[] => {
   const shuffled = [...deck];
   
@@ -58,6 +85,12 @@ export const shuffleDeck = (deck: Card[]): Card[] => {
   return shuffled;
 };
 
+/**
+ * Deals cards to players from a deck
+ * @param deck The deck of cards to deal from
+ * @param numPlayers The number of players to deal to
+ * @returns An array of card arrays, one for each player
+ */
 export const dealCards = (deck: Card[], numPlayers: number): Card[][] => {
   const hands: Card[][] = Array(numPlayers).fill(null).map(() => []);
   const shuffledDeck = shuffleDeck(deck);
@@ -70,6 +103,11 @@ export const dealCards = (deck: Card[], numPlayers: number): Card[][] => {
   return hands;
 };
 
+/**
+ * Initializes a new game state
+ * @param playerNames Optional array of player names (defaults to "Player 1", etc.)
+ * @returns A new GameState object with initial values
+ */
 export const initializeGame = (playerNames: string[] = ['Player 1', 'Player 2', 'Player 3', 'Player 4']): GameState => {
   const deck = createDeck();
   const hands = dealCards(deck, 4);
@@ -95,14 +133,32 @@ export const initializeGame = (playerNames: string[] = ['Player 1', 'Player 2', 
   };
 };
 
+/**
+ * Counts how many cards of a specific rank a player has
+ * @param cards Array of cards to check
+ * @param rank The rank to count
+ * @returns The number of cards of the specified rank
+ */
 export const countCardsByRank = (cards: Card[], rank: Rank): number => {
   return cards.filter(card => card.rank === rank).length;
 };
 
+/**
+ * Retrieves cards with a specific rank and suit
+ * @param cards Array of cards to filter
+ * @param rank The rank to filter by
+ * @param suit The suit to filter by
+ * @returns Array of cards matching both rank and suit
+ */
 export const getCardsByRankAndSuit = (cards: Card[], rank: Rank, suit: Suit): Card[] => {
   return cards.filter(card => card.rank === rank && card.suit === suit);
 };
 
+/**
+ * Checks if a player has complete sets (4 cards of same rank) to form treasure chests
+ * @param cards Array of player's cards
+ * @returns Array of treasure chests (complete sets)
+ */
 export const checkForTreasureChest = (cards: Card[]): { rank: Rank, suits: Suit[] }[] => {
   const treasureChests: { rank: Rank, suits: Suit[] }[] = [];
   
@@ -124,6 +180,12 @@ export const checkForTreasureChest = (cards: Card[]): { rank: Rank, suits: Suit[
   return treasureChests;
 };
 
+/**
+ * Removes specific cards from a player's hand
+ * @param player The player object
+ * @param cardsToRemove Array of cards to remove
+ * @returns Updated player object with cards removed
+ */
 export const removeCardsFromPlayer = (player: Player, cardsToRemove: Card[]): Player => {
   const updatedCards = player.cards.filter(card => 
     !cardsToRemove.some(c => c.id === card.id)
@@ -135,6 +197,12 @@ export const removeCardsFromPlayer = (player: Player, cardsToRemove: Card[]): Pl
   };
 };
 
+/**
+ * Adds cards to a player's hand
+ * @param player The player object
+ * @param cardsToAdd Array of cards to add
+ * @returns Updated player object with new cards
+ */
 export const addCardsToPlayer = (player: Player, cardsToAdd: Card[]): Player => {
   return {
     ...player,
@@ -142,12 +210,22 @@ export const addCardsToPlayer = (player: Player, cardsToAdd: Card[]): Player => 
   };
 };
 
+/**
+ * Checks if the game is over (when all cards are in treasure chests)
+ * @param players Array of player objects
+ * @returns Boolean indicating if the game is over
+ */
 export const checkGameOver = (players: Player[]): boolean => {
   // Game is over when all cards have been placed in treasure chests
   const totalCards = players.reduce((sum, player) => sum + player.cards.length, 0);
   return totalCards === 0;
 };
 
+/**
+ * Determines the winner of the game based on who has the most treasure chests
+ * @param players Array of player objects
+ * @returns ID of the winning player
+ */
 export const determineWinner = (players: Player[]): number => {
   let maxChests = -1;
   let winnerId = -1;
@@ -162,6 +240,15 @@ export const determineWinner = (players: Player[]): number => {
   return winnerId;
 };
 
+/**
+ * Processes a player's guess and updates the game state accordingly
+ * @param gameState Current game state
+ * @param targetPlayerId ID of the player being guessed from (or null)
+ * @param rank The rank being guessed (or null)
+ * @param quantity The quantity of cards being guessed (or null)
+ * @param suits The suits being guessed (or null)
+ * @returns Updated game state after processing the guess
+ */
 export const makeGuess = (
   gameState: GameState,
   targetPlayerId: number | null = null,

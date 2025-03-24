@@ -18,16 +18,31 @@ interface GameBoardProps {
   onBack?: () => void;
 }
 
+/**
+ * The main game board component that orchestrates the entire game
+ * @param onBack Optional callback function to navigate back to menu
+ */
 const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
+  // State to track the current game state
   const [gameState, setGameState] = useState<GameState | null>(null);
+  // State to toggle visibility of current player's cards
   const [showCards, setShowCards] = useState(false);
 
-  // Initialize the game
+  /**
+   * Initialize the game when component mounts
+   */
   useEffect(() => {
     const newGameState = initializeGame();
     setGameState(newGameState);
   }, []);
 
+  /**
+   * Handles player guesses and updates the game state
+   * @param targetPlayerId The player being guessed from
+   * @param rank The rank being guessed
+   * @param quantity The quantity of cards being guessed
+   * @param suits The suits being guessed
+   */
   const handleMakeGuess = (
     targetPlayerId?: number | null,
     rank?: Rank | null,
@@ -81,12 +96,19 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
     }
   };
 
+  /**
+   * Starts a new game
+   */
   const handleNewGame = () => {
     const newGameState = initializeGame();
     setGameState(newGameState);
     setShowCards(false);
   };
 
+  /**
+   * Handles selection of a player for guessing
+   * @param playerId ID of the selected player
+   */
   const handleSelectPlayer = (playerId: number) => {
     handleMakeGuess(playerId);
   };
@@ -99,6 +121,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
 
   return (
     <div className="game-board">
+      {/* Main container with responsive padding and maximum width */}
       <div className="container mx-auto p-4 pt-16 pb-16 max-w-7xl">
         {/* Header with Navigation and Controls */}
         <GameHeader onBack={onBack} onNewGame={handleNewGame} />

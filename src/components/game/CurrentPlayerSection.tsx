@@ -9,6 +9,11 @@ interface CurrentPlayerSectionProps {
   showCards: boolean;
 }
 
+/**
+ * Component that displays the current player's hand and treasure chest
+ * @param currentPlayer The player whose turn it currently is
+ * @param showCards Boolean to control visibility of cards
+ */
 const CurrentPlayerSection: React.FC<CurrentPlayerSectionProps> = ({ 
   currentPlayer, 
   showCards 

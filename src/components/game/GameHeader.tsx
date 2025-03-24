@@ -8,9 +8,15 @@ interface GameHeaderProps {
   onNewGame: () => void;
 }
 
+/**
+ * Header component for the game screen with navigation and game controls
+ * @param onBack Optional callback to navigate back to menu
+ * @param onNewGame Callback to start a new game
+ */
 const GameHeader: React.FC<GameHeaderProps> = ({ onBack, onNewGame }) => {
   return (
     <div className="mb-6 flex justify-between items-center">
+      {/* Back button with arrow icon */}
       <Button 
         variant="ghost" 
         size="sm" 
@@ -21,6 +27,7 @@ const GameHeader: React.FC<GameHeaderProps> = ({ onBack, onNewGame }) => {
         Back to Menu
       </Button>
       
+      {/* Game controls on the right side */}
       <div className="flex gap-2">
         <Button 
           variant="outline" 

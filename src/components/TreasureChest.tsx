@@ -9,8 +9,12 @@ interface TreasureChestProps {
   chests: { rank: Rank, suits: Suit[] }[];
 }
 
+/**
+ * Component to display a player's collected treasure chests
+ * @param chests Array of treasure chests (complete sets) collected by the player
+ */
 const TreasureChest: React.FC<TreasureChestProps> = ({ chests }) => {
-  // No chests yet
+  // Display placeholder when no chests are collected
   if (chests.length === 0) {
     return (
       <div className="glass-panel h-full p-4 flex flex-col items-center justify-center text-muted-foreground">
@@ -20,6 +24,10 @@ const TreasureChest: React.FC<TreasureChestProps> = ({ chests }) => {
     );
   }
 
+  /**
+   * Renders the appropriate icon for each card suit
+   * @param suit The suit to render an icon for
+   */
   const SuitIcon = ({ suit }: { suit: Suit }) => {
     switch (suit) {
       case 'hearts': return <Heart className="w-4 h-4 text-hearts" />;
@@ -31,11 +39,13 @@ const TreasureChest: React.FC<TreasureChestProps> = ({ chests }) => {
 
   return (
     <div className="glass-panel h-full p-4">
+      {/* Treasure chest header */}
       <div className="flex items-center gap-2 mb-4">
         <MapPin className="w-5 h-5 text-amber-500" />
         <h3 className="text-lg font-semibold">Treasure Chests</h3>
       </div>
       
+      {/* Scrollable area for treasure chests */}
       <ScrollArea className="h-[calc(100%-2rem)]">
         <div className="space-y-3">
           {chests.map((chest, index) => (
