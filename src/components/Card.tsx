@@ -104,20 +104,20 @@ const Card: React.FC<CardProps> = ({
             <div className="p-1.5 flex flex-col justify-between h-full">
               {/* Top left rank and suit */}
               <div className="flex items-center justify-between">
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-left">
                   <div className="font-bold">{card.rank}</div>
                   <SuitIcon />
                 </div>
               </div>
               
               {/* Center suit */}
-              <div className="flex justify-center items-center">
+              <div className="flex justify-center items-left">
                 <SuitIcon />
               </div>
               
               {/* Bottom right rank and suit (inverted) */}
               <div className="flex items-center justify-between">
-                <div className="rotate-180 flex flex-col items-center">
+                <div className="rotate-180 flex flex-col items-left">
                   <div className="font-bold">{card.rank}</div>
                   <SuitIcon />
                 </div>
