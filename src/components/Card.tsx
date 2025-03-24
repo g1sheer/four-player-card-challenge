@@ -1,91 +1,118 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card as CardType, Suit } from '@/utils/gameLogic';
-import { Club, Diamond, Heart, Spade } from 'lucide-react';
+import { Card as CardType } from '@/utils/gameLogic';
+import { Heart, Diamond, Club, Spade } from 'lucide-react';
 
 interface CardProps {
   card: CardType;
-  revealed?: boolean;
-  onClick?: () => void;
-  className?: string;
+  revealed: boolean;
   animationDelay?: number;
+  size?: 'small' | 'medium' | 'large'; // Новый проп для размера карты
 }
-
-const getSuitSymbol = (suit: Suit): string => {
-  switch (suit) {
-    case 'hearts': return '♥';
-    case 'diamonds': return '♦';
-    case 'clubs': return '♣';
-    case 'spades': return '♠';
-  }
-};
-
-const getSuitIcon = (suit: Suit, size: number = 16) => {
-  switch (suit) {
-    case 'hearts': return <Heart size={size} className="text-hearts" />;
-    case 'diamonds': return <Diamond size={size} className="text-diamonds" />;
-    case 'clubs': return <Club size={size} className="text-clubs" />;
-    case 'spades': return <Spade size={size} className="text-spades" />;
-  }
-};
 
 const Card: React.FC<CardProps> = ({ 
   card, 
-  revealed = true, 
-  onClick, 
-  className = '',
-  animationDelay = 0 
+  revealed = false,
+  animationDelay = 0,
+  size = 'medium'
 }) => {
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isRevealed, setIsRevealed] = useState(revealed);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [isInitialRender, setIsInitialRender] = useState(true);
+
+  // Определение классов размера
+  const getSizeClasses = () => {
+    switch (size) {
+      case 'small':
+        return 'w-16 h-24 text-sm';
+      case 'large':
+        return 'w-28 h-40 text-xl';
+      case 'medium':
+      default:
+        return 'w-24 h-36 text-base';
+    }
+  };
+  
+  // Размеры иконок масти
+  const getIconSize = () => {
+    switch (size) {
+      case 'small':
+        return 14;
+      case 'large':
+        return 22;
+      case 'medium':
+      default:
+        return 18;
+    }
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsAnimating(true);
-    }, animationDelay);
-
-    return () => clearTimeout(timer);
-  }, [animationDelay]);
-
-  useEffect(() => {
-    setIsRevealed(revealed);
+    // Skip the animation on initial render
+    if (isInitialRender) {
+      setIsFlipped(revealed);
+      setIsInitialRender(false);
+      return;
+    }
+    
+    // Always animate when revealed state changes
+    setIsFlipped(revealed);
   }, [revealed]);
 
-  const suitSymbol = getSuitSymbol(card.suit);
-  const suitClass = card.suit === 'hearts' || card.suit === 'diamonds' ? 'text-' + card.suit : 'text-' + card.suit;
-
-  const handleClick = () => {
-    if (onClick) onClick();
+  const SuitIcon = () => {
+    const iconSize = getIconSize();
+    
+    switch (card.suit) {
+      case 'hearts':
+        return <Heart size={iconSize} className="text-hearts" />;
+      case 'diamonds':
+        return <Diamond size={iconSize} className="text-diamonds" />;
+      case 'clubs':
+        return <Club size={iconSize} className="text-clubs" />;
+      case 'spades':
+        return <Spade size={iconSize} className="text-spades" />;
+    }
   };
+
+  const sizeClass = getSizeClasses();
 
   return (
     <div 
-      className={`flip-card ${isRevealed ? 'flipped' : ''} ${isAnimating ? 'animate-card-deal' : 'opacity-0'} ${className}`}
-      onClick={handleClick}
-      style={{ 
-        animationDelay: `${animationDelay}ms`,
-        transitionDelay: `${animationDelay}ms`
-      }}
+      className={`flip-card ${sizeClass} ${isFlipped ? 'flipped' : ''}`}
+      style={{ animationDelay: `${animationDelay}ms` }}
     >
-      <div className="flip-card-inner playing-card">
-        <div className="flip-card-front card-front">
-          <div className="flex justify-between items-start">
-            <div className={`text-lg font-bold ${suitClass}`}>{card.rank}</div>
-            <div className={`text-lg ${suitClass}`}>{suitSymbol}</div>
-          </div>
-          <div className={`text-4xl self-center ${suitClass}`}>{suitSymbol}</div>
-          <div className="flex justify-between items-end rotate-180">
-            <div className={`text-lg font-bold ${suitClass}`}>{card.rank}</div>
-            <div className={`text-lg ${suitClass}`}>{suitSymbol}</div>
+      <div className="flip-card-inner w-full h-full">
+        {/* Card Front */}
+        <div className="flip-card-front w-full h-full">
+          <div className={`card-front w-full h-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md`}>
+            <div className="p-2 flex flex-col justify-between h-full">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-bold">{card.rank}</div>
+                  <SuitIcon />
+                </div>
+              </div>
+              
+              <div className="flex justify-center items-center">
+                <SuitIcon />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="rotate-180">
+                  <div className="font-bold">{card.rank}</div>
+                  <SuitIcon />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="flip-card-back card-back">
-          <div className="card-back-pattern">
+        
+        {/* Card Back */}
+        <div className="flip-card-back w-full h-full">
+          <div className="card-back-pattern w-full h-full">
             <div className="card-back-border">
               <div className="card-back-inner">
                 <div className="card-back-diamond"></div>
-                <div className="card-back-pattern-grid">
-                  {Array(9).fill(0).map((_, i) => (
+                <div className="absolute inset-0 grid grid-cols-3 gap-2 p-3">
+                  {Array.from({ length: 9 }).map((_, i) => (
                     <div key={i} className="card-back-pattern-dot"></div>
                   ))}
                 </div>

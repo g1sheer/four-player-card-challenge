@@ -98,7 +98,7 @@
 
 @layer components {
   .playing-card {
-    @apply relative w-24 h-36 bg-cardface rounded-lg shadow-md transition-all duration-300 transform-gpu backface-visibility-hidden cursor-pointer;
+    @apply relative bg-cardface rounded-lg shadow-md transition-all duration-300 transform-gpu backface-visibility-hidden cursor-pointer;
     perspective: 1000px;
   }
 
@@ -155,7 +155,9 @@
   }
   
   .card-back-diamond {
-    @apply absolute inset-0 m-auto w-16 h-16 bg-indigo-700 rounded-sm;
+    @apply absolute inset-0 m-auto bg-indigo-700 rounded-sm;
+    width: 40%;
+    height: 40%;
     transform: rotate(45deg);
     background-image: radial-gradient(
       circle at center,
@@ -177,12 +179,20 @@
 
 /* Custom styles for cards */
 .flip-card {
-  transform-style: preserve-3d;
+  perspective: 1000px;
+  display: inline-block;
+  margin: 0.25rem;
+  transition: transform 0.3s;
+}
+
+.flip-card:hover {
+  transform: translateY(-5px);
 }
 
 .flip-card-inner {
   transition: transform 0.6s;
   transform-style: preserve-3d;
+  position: relative;
 }
 
 .flip-card.flipped .flip-card-inner {
@@ -192,8 +202,41 @@
 .flip-card-front, .flip-card-back {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .flip-card-back {
   transform: rotateY(180deg);
 }
+
+/* Animation for cards */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in-up 0.3s ease-out forwards;
+}
+
