@@ -12,8 +12,8 @@ interface PlayerHandProps {
   cardsRevealed?: boolean;
   onSelectPlayer?: () => void;
   selectedForGuess?: boolean;
-  compactView?: boolean; // Новый проп для компактного отображения
-  enlarged?: boolean; // Новый проп для увеличенного отображения
+  compactView?: boolean;
+  enlarged?: boolean;
 }
 
 const PlayerHand: React.FC<PlayerHandProps> = ({
@@ -51,7 +51,7 @@ const PlayerHand: React.FC<PlayerHandProps> = ({
     }
   };
 
-  // Классы для разных типов отображения
+  // Classes for different display types
   const containerClasses = `
     glass-panel p-4 transition-all duration-300 
     ${selectedForGuess ? 'ring-2 ring-primary' : ''} 
@@ -86,14 +86,14 @@ const PlayerHand: React.FC<PlayerHandProps> = ({
       {player.cards.length > 0 ? (
         <div className="relative">
           <div className={`
-            flex ${compactView ? 'flex-wrap justify-center gap-1' : 'flex-wrap justify-center gap-2'}
-            ${enlarged ? 'justify-start' : ''}
+            flex ${compactView ? 'flex-wrap justify-center gap-1' : 'flex-wrap gap-2'}
+            ${enlarged ? 'justify-center md:justify-start' : ''}
           `}>
             {sortedCards.map((card, index) => (
               <Card 
                 key={card.id} 
                 card={card} 
-                revealed={!isCurrentPlayer}
+                revealed={isCurrentPlayer ? cardsRevealed : true}
                 animationDelay={index * 50}
                 size={compactView ? 'small' : enlarged ? 'large' : 'medium'}
               />
@@ -101,7 +101,7 @@ const PlayerHand: React.FC<PlayerHandProps> = ({
           </div>
         </div>
       ) : (
-        <div className={`${compactView ? 'h-20' : 'h-36'} flex items-center justify-center text-muted-foreground`}>
+        <div className={`${compactView ? 'h-16' : 'h-28'} flex items-center justify-center text-muted-foreground`}>
           No cards
         </div>
       )}

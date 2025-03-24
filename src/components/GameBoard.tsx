@@ -156,9 +156,45 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
           </div>
         )}
         
-        {/* Новая структура игрового интерфейса */}
+        {/* Reordered game interface with player content first */}
         <div className="flex flex-col space-y-6">
-          {/* Opponents - компактное отображение */}
+          {/* Current player zone */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left column: Current player's cards */}
+            <div className="lg:col-span-2">
+              <div className="glass-panel p-4">
+                <h3 className="text-lg font-semibold mb-4">Your Hand</h3>
+                <PlayerHand
+                  player={currentPlayer}
+                  isCurrentPlayer={true}
+                  isPlayerTurn={true}
+                  cardsRevealed={showCards}
+                  enlarged={true}
+                />
+              </div>
+            </div>
+            
+            {/* Right column: Treasure chest */}
+            <div>
+              <div className="glass-panel p-4 h-full">
+                <h3 className="text-lg font-semibold mb-4">Your Treasure</h3>
+                <TreasureChest chests={currentPlayer.treasureChests} />
+              </div>
+            </div>
+          </div>
+          
+          {/* Guessing interface - under player's cards */}
+          {!gameState.gameOver && (
+            <div className="mt-4">
+              <GuessInterface
+                gameState={gameState}
+                onMakeGuess={handleMakeGuess}
+                visible={true}
+              />
+            </div>
+          )}
+          
+          {/* Opponents section - moved below player's content */}
           <div className="glass-panel p-4">
             <h3 className="text-lg font-semibold mb-4">Opponents</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -175,48 +211,12 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBack }) => {
                     cardsRevealed={false}
                     onSelectPlayer={() => handleMakeGuess(player.id)}
                     selectedForGuess={gameState.selectedPlayerIndex === player.id}
-                    compactView={true} // Новый проп для компактного вида
+                    compactView={true}
                   />
                 );
               })}
             </div>
           </div>
-          
-          {/* Зона текущего игрока */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Левая колонка: Карты текущего игрока */}
-            <div className="lg:col-span-2">
-              <div className="glass-panel p-4">
-                <h3 className="text-lg font-semibold mb-4">Your Hand</h3>
-                <PlayerHand
-                  player={currentPlayer}
-                  isCurrentPlayer={true}
-                  isPlayerTurn={true}
-                  cardsRevealed={showCards}
-                  enlarged={true} // Новый проп для увеличенного вида
-                />
-              </div>
-            </div>
-            
-            {/* Правая колонка: Сокровищница */}
-            <div>
-              <div className="glass-panel p-4 h-full">
-                <h3 className="text-lg font-semibold mb-4">Your Treasure</h3>
-                <TreasureChest chests={currentPlayer.treasureChests} />
-              </div>
-            </div>
-          </div>
-          
-          {/* Интерфейс угадывания - под картами игрока */}
-          {!gameState.gameOver && (
-            <div className="mt-4">
-              <GuessInterface
-                gameState={gameState}
-                onMakeGuess={handleMakeGuess}
-                visible={true}
-              />
-            </div>
-          )}
         </div>
       </div>
     </div>

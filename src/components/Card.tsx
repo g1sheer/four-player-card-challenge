@@ -7,7 +7,7 @@ interface CardProps {
   card: CardType;
   revealed: boolean;
   animationDelay?: number;
-  size?: 'small' | 'medium' | 'large'; // Новый проп для размера карты
+  size?: 'small' | 'medium' | 'large';
 }
 
 const Card: React.FC<CardProps> = ({ 
@@ -19,29 +19,29 @@ const Card: React.FC<CardProps> = ({
   const [isFlipped, setIsFlipped] = useState(false);
   const [isInitialRender, setIsInitialRender] = useState(true);
 
-  // Определение классов размера
+  // Determine size classes
   const getSizeClasses = () => {
     switch (size) {
       case 'small':
         return 'w-16 h-24 text-sm';
       case 'large':
-        return 'w-28 h-40 text-xl';
+        return 'w-28 h-40 text-lg';
       case 'medium':
       default:
         return 'w-24 h-36 text-base';
     }
   };
   
-  // Размеры иконок масти
+  // Icon sizes for suits based on card size
   const getIconSize = () => {
     switch (size) {
       case 'small':
-        return 14;
+        return 12;
       case 'large':
-        return 22;
+        return 18;
       case 'medium':
       default:
-        return 18;
+        return 14;
     }
   };
 
@@ -83,9 +83,9 @@ const Card: React.FC<CardProps> = ({
         {/* Card Front */}
         <div className="flip-card-front w-full h-full">
           <div className={`card-front w-full h-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md`}>
-            <div className="p-2 flex flex-col justify-between h-full">
+            <div className="p-1.5 flex flex-col justify-between h-full">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="flex flex-col items-center">
                   <div className="font-bold">{card.rank}</div>
                   <SuitIcon />
                 </div>
@@ -96,7 +96,7 @@ const Card: React.FC<CardProps> = ({
               </div>
               
               <div className="flex items-center justify-between">
-                <div className="rotate-180">
+                <div className="rotate-180 flex flex-col items-center">
                   <div className="font-bold">{card.rank}</div>
                   <SuitIcon />
                 </div>
