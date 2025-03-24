@@ -93,7 +93,7 @@ const PlayerHand: React.FC<PlayerHandProps> = ({
               <Card 
                 key={card.id} 
                 card={card} 
-                revealed={isCurrentPlayer}
+                revealed={!isCurrentPlayer}
                 animationDelay={index * 50}
                 size={compactView ? 'small' : enlarged ? 'large' : 'medium'}
               />
